@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 project(service_template CXX)
+set (CMAKE_CXX_STANDARD 20)
 
 include(third_party/userver/cmake/SetupEnvironment.cmake)
 include(GNUInstallDirs)
@@ -9,8 +10,14 @@ add_subdirectory(third_party/userver)
 
 # Common sources
 add_library(${PROJECT_NAME}_objs OBJECT
-    src/hello.hpp
-    src/hello.cpp
+    src/components/automat_interact_component.cpp
+    src/components/automat_interact_component.hpp
+    src/handlers/signal_handler.cpp
+    src/handlers/signal_handler.hpp
+    src/models/automat.cpp
+    src/models/automat.hpp
+    src/converters/automat_converter.cpp
+    src/converters/automat_converter.hpp
 )
 target_link_libraries(${PROJECT_NAME}_objs PUBLIC userver-core)
 
@@ -22,7 +29,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_objs)
 
 # Unit Tests
 add_executable(${PROJECT_NAME}_unittest
-    src/hello_test.cpp
+    src/converters/automat_converter_test.cpp
 )
 target_link_libraries(${PROJECT_NAME}_unittest PRIVATE ${PROJECT_NAME}_objs userver-utest)
 add_google_tests(${PROJECT_NAME}_unittest)
@@ -30,7 +37,7 @@ add_google_tests(${PROJECT_NAME}_unittest)
 
 # Benchmarks
 add_executable(${PROJECT_NAME}_benchmark
-	src/hello_benchmark.cpp
+	
 )
 target_link_libraries(${PROJECT_NAME}_benchmark PRIVATE ${PROJECT_NAME}_objs userver-ubench)
 add_google_benchmark_tests(${PROJECT_NAME}_benchmark)
